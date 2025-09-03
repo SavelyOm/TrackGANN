@@ -9,4 +9,12 @@ The network is trained hierarchically using the "time_resolution" parameter. Thi
 
 You can find the examples of training and evaluating for TrackGANN in the folder "Examples". Examples for configuration files for testing and training you can find in the folder "configs". 
 
+# Starting
 
+You can start training or evaluation using the commands:
+
+`python Training.py -d Path\to\configs_folder -c ConfigName.yaml `
+
+`python Evaluate.py -d Path\to\configs_folder -c ConfigName.yaml `
+
+In this case are `ConfigName==TrainConfig` for train settings and `ConfigName==TestConfig` for evaluation settings
