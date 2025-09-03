@@ -1,0 +1,77 @@
+
+name_of_directory: TestDir
+
+detector:
+  detector_eff: 0.95
+  n_stations: 15
+  r_min: 150
+  r_max: 850
+
+Train_dataset:
+  dataset_name: SPD
+  MLtrackPath: ""
+  dataset_directory: Train
+  time_resolution: 4
+  max_tracks: 6
+  mean_events: 15
+  n_samples: 10
+  MLtrackPath: ""
+
+Test_dataset:
+  dataset_name: SPD
+  MLtrackPath: ""
+  dataset_directory: Test
+  time_resolution: 4
+  max_tracks: 6
+  mean_events: 15
+  n_samples: 10
+  log_label: SPD_15_DeltaT4
+  
+
+Test_dataset1:
+  dataset_name: SPD
+  MLtrackPath: ""
+  dataset_directory: Test1
+  time_resolution: 4
+  max_tracks: 6
+  mean_events: 10
+  n_samples: 10
+  log_label: SPD_10_DeltaT4
+  MLtrackPath: ""
+
+model:
+  encoder:
+    hidden_linear_layers:
+    - 128
+    - 128
+    - 64
+    out_linear_layer: 32
+    n_convolutions: 6
+  classifier:
+    edge_weight_layers:
+    - 128
+    - 128
+    edge_update_layers:
+    - 128
+    - 128
+    node_update_layers:
+    - 128
+    - 128
+    n_convolutions: 6
+
+training:
+  pos_weight: 1
+  neg_weight: 0.9
+  gamma: 1.5
+  save_prob: 1
+  n_epochs: 5
+
+loader:
+  load_model: True
+  model_dirrectory: SPD_15Event/SPD_SN5
+  model_name: SPD_SN5_model_epoch_780
+
+saver:
+  model_name: Test_model
+  save_step: 5
+

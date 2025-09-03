@@ -1,0 +1,53 @@
+
+
+timeslice:
+  max_tracks: 6
+  mean_events: 10
+
+detector:
+  detector_eff: 0.95
+  n_stations: 15
+  r_min: 150
+  r_max: 850
+
+
+dataset:
+  dataset_name: "SPD"
+  name_of_directory: "TestDir_ForEval"
+  n_samples: 10
+  test_fraction: 1
+  MLtrackPath: ""
+
+
+
+Log_parms:
+  log_label: LogName
+
+loader:
+  model_dirrectory: "SPD_15Event/SPD_SN4"
+  model_name: "SPD_SN4_model_epoch_680"
+
+
+model:
+  encoder:
+    hidden_linear_layers:
+    - 128
+    - 128
+    - 64
+    out_linear_layer: 32
+    n_convolutions: 6
+  classifier:
+    edge_weight_layers:
+    - 128
+    - 128
+    edge_update_layers:
+    - 128
+    - 128
+    node_update_layers:
+    - 128
+    - 128
+    n_convolutions: 6
+  super_graph: 
+    neighborhood_degree: 4
+
+

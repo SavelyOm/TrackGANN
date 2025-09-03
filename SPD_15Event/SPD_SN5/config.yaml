@@ -1,0 +1,51 @@
+timeslice:
+  detector_eff: 1.0
+  n_stations: 35
+  r_min: 150
+  r_max: 850
+  max_tracks: 6
+  mean_events: 15
+dataset:
+  dataset_name: SPD
+  name_of_directory: SPD_15Event/SPD_SN5
+  n_samples: 1000
+  test_fraction: 0.3
+model:
+  encoder:
+    hidden_linear_layers:
+    - 128
+    - 128
+    - 64
+    out_linear_layer: 32
+    n_convolutions: 6
+  classifier:
+    edge_weight_layers:
+    - 128
+    - 128
+    edge_update_layers:
+    - 128
+    - 128
+    node_update_layers:
+    - 128
+    - 128
+    n_convolutions: 6
+  super_graph:
+    neighborhood_degree: 5
+    hand_filter: 1
+training:
+  pos_weight: 1
+  neg_weight: 0.6
+  gamma: 1.5
+  save_prob: 1
+  n_epochs: 110
+visualization:
+  plot_label: SPD_SN5
+loader:
+  load_model: true
+  model_dirrectory: SPD_15Event/SPD_SN4
+  model_name: SPD_SN4_model_epoch_680
+saver:
+  model_name: SPD_SN5_model
+  save_step: 10
+device:
+  node: 0
