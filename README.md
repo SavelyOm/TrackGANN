@@ -13,8 +13,6 @@ You can find the examples of training and evaluating for TrackGANN in the folder
 
 You can start training or evaluation using the commands:
 
-`python Training.py -d Path\to\configs_folder -c ConfigName.yaml `
-
-`python Evaluate.py -d Path\to\configs_folder -c ConfigName.yaml `
+`python Training.py/Evaluate.py -d Path\to\configs_folder -c ConfigName.yaml `
 
 In this case are `ConfigName==TrainConfig` for train settings and `ConfigName==TestConfig` for evaluation settings
