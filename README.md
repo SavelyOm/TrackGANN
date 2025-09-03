@@ -1,3 +1,5 @@
+# TrackGANN
+
 TrackGANN is a GANN PyTorch-based package which adopted by St. Omelianchuk Savelii. It is NN for tracks by events in the SPD experiment in 2025 year. TrackGANN model is the Graph Attention Neural Network with an Encoder and an Edges Classifier. You can read comprehensive in the "ArticleLink"
 
 This packege is realized logic for working with CSV files with the format:
