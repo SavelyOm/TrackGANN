@@ -15,7 +15,7 @@ Train_dataset:
   max_tracks: 6
   mean_events: 15
   n_samples: 10
-  MLtrackPath: ""
+
 
 Test_dataset:
   dataset_name: SPD
@@ -29,15 +29,15 @@ Test_dataset:
   
 
 Test_dataset1:
-  dataset_name: SPD
-  MLtrackPath: ""
+  dataset_name: TrackML
+  MLtrackPath: "TrackML_data/train2"
   dataset_directory: Test1
   time_resolution: 4
   max_tracks: 6
   mean_events: 10
   n_samples: 10
-  log_label: SPD_10_DeltaT4
-  MLtrackPath: ""
+  log_label: ML_10_DeltaT4
+
 
 model:
   encoder:
