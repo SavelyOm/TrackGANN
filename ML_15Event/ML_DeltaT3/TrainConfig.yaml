@@ -1,0 +1,64 @@
+name_of_directory: ML_15Event/ML_DeltaT3
+detector:
+  detector_eff: 0.95
+  n_stations: 35
+  r_min: 150
+  r_max: 850
+Train_dataset:
+  dataset_name: TrackML
+  MLtrackPath: "TrackML_data/train4"
+  dataset_directory: Train_ML_DT3
+  time_resolution: 3
+  max_tracks: 6
+  mean_events: 15
+  n_samples: 800
+Test_dataset:
+  dataset_name: TrackML
+  MLtrackPath: "TrackML_data/train2"
+  dataset_directory: Test_ML_DT3
+  time_resolution: 3
+  max_tracks: 6
+  mean_events: 15
+  n_samples: 300
+  log_label: ML15_DT3
+Test_dataset1:
+  dataset_name: TrackML
+  MLtrackPath: "TrackML_data/train2"
+  dataset_directory: Test_ML_DT3
+  time_resolution: 3
+  max_tracks: 6
+  mean_events: 10
+  n_samples: 300
+  log_label: ML10_DT3
+model:
+  encoder:
+    hidden_linear_layers:
+    - 128
+    - 128
+    - 64
+    out_linear_layer: 32
+    n_convolutions: 6
+  classifier:
+    edge_weight_layers:
+    - 128
+    - 128
+    edge_update_layers:
+    - 128
+    - 128
+    node_update_layers:
+    - 128
+    - 128
+    n_convolutions: 6
+training:
+  pos_weight: 1
+  neg_weight: 0.8
+  gamma: 1.5
+  save_prob: 1
+  n_epochs: 110
+loader:
+  load_model: true
+  model_dirrectory: ML_15Event/ML_DeltaT2
+  model_name: TrackML_DeltaT2_model_epoch_100
+saver:
+  model_name: TrackML_DeltaT3_model
+  save_step: 10
