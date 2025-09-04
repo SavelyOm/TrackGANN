@@ -7,7 +7,7 @@ This package implements logic for working with CSV files in the following format
 
 The network is trained hierarchically using the "time_resolution" parameter, which controls the temporal resolution of the detector. The pre-trained models for different "time_resolution" values were trained sequentially using an average of 15 events per time slice. The models, datasets, and quality metrics are available in the `SPD_15Event` and `ML_15Event` folders.
 
-You can find examples of training and evaluation for TrackGANN in the "Examples" folder. Configuration file examples for training and testing are available in the `configs` folder.
+You can find examples of training and evaluation for TrackGANN in the `Examples` folder. Configuration file examples for training and testing are available in the `configs` folder.
 
 # Training
 
