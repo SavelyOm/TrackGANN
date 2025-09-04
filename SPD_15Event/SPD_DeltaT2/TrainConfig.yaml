@@ -1,0 +1,61 @@
+name_of_directory: SPD_15Event/SPD_DeltaT2
+detector:
+  detector_eff: 0.95
+  n_stations: 35
+  r_min: 150
+  r_max: 850
+Train_dataset:
+  dataset_name: SPD
+  MLtrackPath: ""
+  dataset_directory: Train_SPD15_DT2
+  time_resolution: 4
+  max_tracks: 6
+  mean_events: 15
+  n_samples: 700
+  MLtrackPath: ""
+Test_dataset:
+  dataset_name: SPD
+  MLtrackPath: ""
+  dataset_directory: Test_SPD15_DT2
+  time_resolution: 4
+  max_tracks: 6
+  mean_events: 15
+  n_samples: 300
+  log_label: SPD_DeltaT2
+model:
+  encoder:
+    hidden_linear_layers:
+    - 128
+    - 128
+    - 64
+    out_linear_layer: 32
+    n_convolutions: 6
+  classifier:
+    edge_weight_layers:
+    - 128
+    - 128
+    edge_update_layers:
+    - 128
+    - 128
+    node_update_layers:
+    - 128
+    - 128
+    n_convolutions: 6
+  super_graph:
+    neighborhood_degree: 2
+    hand_filter: 1
+training:
+  pos_weight: 1
+  neg_weight: 0.5
+  gamma: 1.5
+  save_prob: 1
+  n_epochs: 110
+loader:
+  load_model: true
+  model_dirrectory: SPD_10Event/SPD_DeltaT2
+  model_name: SPD_DeltaT2_model_epoch_100
+saver:
+  model_name: SPD_DeltaT2_model
+  save_step: 10
+device:
+  node: 0
