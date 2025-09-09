@@ -2,6 +2,10 @@ import torch
 import time
 from pathlib import Path
 import yaml
+import pandas as pd
+import os
+from collections import defaultdict
+import csv
 
 from TrackGANN.src.model import TracksNN
 from TrackGANN.src.dataset import SPDdataset, TrackMLdataset
@@ -36,7 +40,7 @@ det_eff = TESTCONFIG['detector']['detector_eff']
 
 # Timeslice parameters
 #=======================================================================#
-time_resolution = TESTCONFIG['model']['super_graph']['neighborhood_degree']
+time_resolution = TESTCONFIG['dataset']['time_resolution']
 n_samples = TESTCONFIG['dataset']['n_samples']
 mean_event = TESTCONFIG['timeslice']['mean_events']
 max_tracks = TESTCONFIG['timeslice']['max_tracks']
@@ -78,7 +82,13 @@ if data_name == 'TrackML':
     
 dataset.test_data_generation(n_samples, mean_event, max_tracks, time_resolution, name_of_directory)
 graphs = dataset.convert_to_graph(name_of_directory)
+
 #=======================================================================#
+
+
+
+                
+
 
 
 # Config logit

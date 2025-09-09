@@ -3,10 +3,11 @@
 timeslice:
   max_tracks: 6
   mean_events: 10
+  time_resolution: 7
 
 detector:
   detector_eff: 0.95
-  n_stations: 15
+  n_stations: 35
   r_min: 150
   r_max: 850
 
@@ -15,7 +16,7 @@ dataset:
   dataset_name: "SPD"
   MLtrackPath: ""
   name_of_directory: "TestDir_ForEval"
-  n_samples: 10
+  n_samples: 100
   test_fraction: 1
   MLtrackPath: ""
 
@@ -25,8 +26,8 @@ Log_parms:
   log_label: LogName
 
 loader:
-  model_dirrectory: "SPD_15Event/SPD_SN4"
-  model_name: "SPD_SN4_model_epoch_680"
+  model_dirrectory: "C:/Users/suka1/NN/GNN_practice/TrackGANN/SPD_15Event/SPD_DeltaT5"
+  model_name: "SPD_DeltaT5_model_epoch_420"
 
 
 model:
@@ -48,7 +49,6 @@ model:
     - 128
     - 128
     n_convolutions: 6
-  super_graph: 
-    neighborhood_degree: 4
+
 
 
