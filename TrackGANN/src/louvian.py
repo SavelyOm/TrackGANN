@@ -9,25 +9,21 @@ from .loggers import log_to_file
 
 
 class GraphMethod:
-    """Базовый класс для математических методов обработки графов"""
     def __init__(self, graph):
         self.graph = graph 
         self.result = None    
 
     def compute(self):
-        """Основной метод вычислений"""
-        raise NotImplementedError("Метод compute должен быть реализован в подклассе")
+        raise NotImplementedError("The method compute() is not defined")
 
     def visualize_result(self):
-        """Визуализация результатов"""
         if self.result is None:
-            raise ValueError("Сначала выполните compute()")
-        print(f"Результат вычислений: {self.result}")
+            raise ValueError("Execute the method compute()")
+        print(f"Result: {self.result}")
 
 
 
 class LouvainMethod(GraphMethod):
-    """Реализация алгоритма Лувена для кластеризации графа"""
     def __init__(self, graph):
         self.graph = graph
 
@@ -51,7 +47,6 @@ class LouvainMethod(GraphMethod):
 
     def louvain_optimize(self, adj_matrix: torch.Tensor, clusters: torch.Tensor, max_iter: int = 20):
         device = adj_matrix.device
-        """Итеративная оптимизация Лувена"""
         self.communities = clusters.clone().to(device)
         self.N = adj_matrix.size(0)
         
@@ -70,12 +65,12 @@ class LouvainMethod(GraphMethod):
                 max_delta = 0.0
                 Q_init = self.modularity(adj_matrix, self.communities)
                 
-                # Проверяем все соседние сообщества
+                
                 for comm in unique_comms:
                     if comm == current_comm:
                         continue
                         
-                    # Пробное перемещение
+                    
                     test_communities = self.communities.clone()
                     test_communities[node] = comm
                     Q_new = self.modularity(adj_matrix, test_communities)
@@ -84,7 +79,7 @@ class LouvainMethod(GraphMethod):
                         max_delta = delta
                         best_comm = comm
                 
-                # Применяем лучшее перемещение
+                
                 if max_delta > 0:
                     self.communities[node] = best_comm
                     improved = True
@@ -130,7 +125,7 @@ class LouvainMethod(GraphMethod):
         plt.figure(figsize=(12, 8))
         nx.draw(self.G, pos, node_color=colors, cmap='tab20', node_size=200, 
             edge_color='gray', alpha=0.7, with_labels=True)
-        plt.title(f'Граф после отчистки')
+        plt.title(f'Final Graph')
         plt.show()
 
 
@@ -155,11 +150,3 @@ def compairsion(tensor, **kwargs):
         cluster_to_nodes1[cluster.item()].append(node_idx)
     
     return cluster_to_nodes1
-
-
-#graph=result2graph(pred=pred,edge_index=edge_index)
-#louvian = LouvainMethod(graph=graph)
-#louvian.compute()
-#clusters = louvian.clusters()
-#print(clusters)
-#compairsion(clusters)
