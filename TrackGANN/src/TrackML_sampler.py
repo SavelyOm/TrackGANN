@@ -64,14 +64,12 @@ class TrackMLsampler():
         self.mean_tracks = mean_tracks
 
 
-        #np.random.seed(20)
-        #путь к первому событию для корректного итерирования по событиям
         folder = Path(self.data_folder)
         first_file = next((f.name for f in folder.iterdir() if f.is_file()), None)
         parts = first_file.split('-')
         number_part = int(parts[0][5:])
         
-        #сбор таймслайса
+
         num_event = np.random.poisson(self.mean_event,size=1)
         self.timeslice = pd.DataFrame(columns=['x', 'y', 'z', 'track_id', 'event_id'])
 
@@ -106,31 +104,29 @@ class TrackMLsampler():
         after timeslece_generator() '''
 
         self.time_resolution = time_resolution
-            # Уникальные event_id, отсортированные по порядку
+
         unique_events = sorted(self.timeslice['event_id'].unique())
         num_events = len(unique_events)
 
-        # Создаем временные метки для каждого event_id (равномерно от 0 до 1)
+        
         event_time_centers = {event: event_id / (num_events - 1) for event_id, event in enumerate(unique_events)}
         if (self.time_resolution+1) < max(unique_events):
             DeltaT = lambda s: abs((event_time_centers[s] - event_time_centers[0])/2)  
-        # Стандартное отклонение (можно настроить)
+        
         else: 
             DeltaT = lambda s: abs((event_time_centers[max(unique_events)] - event_time_centers[0])/2)
 
-        # Словарь для хранения времени и границ по track_id
+        
         track_time_data = {}
 
-        # Генерируем время и погрешности для каждого трека
+        
         for track_id, group in self.timeslice.groupby('track_id'):
-            event_id = group['event_id'].iloc[0]  # event_id для этого трека
+            event_id = group['event_id'].iloc[0]  
             t_center = event_time_centers[event_id]
             
-            # Добавляем шум (одинаковый для всех хитов трека)
-            t_noise = DeltaT(self.time_resolution+1)-DeltaT(self.time_resolution+1)/1000
-                # Ограничиваем в [0, 1]
             
-            # Границы (например, ±2σ)
+            t_noise = DeltaT(self.time_resolution+1)-DeltaT(self.time_resolution+1)/1000
+                
             t_left = max(0, t_center-t_noise)
             t_right = min(t_center+t_noise,1)
             
@@ -149,16 +145,16 @@ class TrackMLsampler():
         after timeslece_generator() '''
 
         unique_tracks = self.timeslice['track_id'].unique()
-        np.random.shuffle(unique_tracks)  # Перемешиваем track_id
+        np.random.shuffle(unique_tracks)
 
-        # Собираем DataFrame заново в новом порядке
+       
         self.timeslice = pd.concat(
             [self.timeslice[self.timeslice['track_id'] == track_id] for track_id in unique_tracks],
             ignore_index=True
         )
         track_mapping = {old_id: new_id for new_id, old_id in enumerate(unique_tracks)}
 
-        # Применяем маппинг к столбцу track_id
+    
         self.timeslice['track_id'] = self.timeslice['track_id'].map(track_mapping)
          
         return self.timeslice
@@ -176,29 +172,20 @@ class TrackMLsampler():
         return self.timeslice
 
     def plot_timeslice(self):
-        """
-        Визуализирует треки из временного среза, раскрашивая треки каждого события в свой цвет.
-        
-        Параметры:
-            timeslice_df (pd.DataFrame): DataFrame с колонками ['x', 'y', 'z', 'track_id', 'event_id']
-        """
+
         timeslice_df=self.timeslice
 
-        # Создаем фигуру с 3D проекцией
+        
         fig = plt.figure(figsize=(12, 8))
         ax = fig.add_subplot(111, projection='3d')
         
-        # Получаем уникальные event_id и создаем цветовую карту
+        
         unique_events = timeslice_df['event_id'].unique()
         colors = plt.cm.tab20(np.linspace(0, 1, len(unique_events)))
         
-        # Словарь для соответствия event_id и цвета
         event_colors = {event: colors[i] for i, event in enumerate(unique_events)}
-        
-        # Группируем по event_id и track_id
         grouped = timeslice_df.groupby(['event_id', 'track_id'])
         
-        # Рисуем каждый трек
         for (event_id, track_id), group in grouped:
             ax.plot(
                 group['x'], 
@@ -209,16 +196,16 @@ class TrackMLsampler():
                 markersize=3,
                 linewidth=1,
                 alpha=0.7,
-                label=f'Event {event_id}' if track_id == 0 else ""  # Подпись только для первого трека в событии
+                label=f'Event {event_id}' if track_id == 0 else ""  
             )
         
-        # Настройки графика
+        
         ax.set_xlabel('X coordinate')
         ax.set_ylabel('Y coordinate')
         ax.set_zlabel('Z coordinate')
         ax.set_title('Timeslice Visualization with Event Coloring')
         
-        # Легенда (только для событий)
+       
         handles, labels = ax.get_legend_handles_labels()
         ax.legend(handles, labels, title='Events', bbox_to_anchor=(1.05, 1), loc='upper left')
         

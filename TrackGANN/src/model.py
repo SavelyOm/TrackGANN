@@ -4,7 +4,7 @@ from torch_geometric.nn import MessagePassing
 from torch_geometric.data import Data
 from torch_geometric.nn import  GATConv
 
-#from src.config import TRAINCONFIG
+
 from TrackGANN.utils.model_functions import represent_to_graph_with_times, timeslice_split, tracks_pool, norm_layer
 
 
