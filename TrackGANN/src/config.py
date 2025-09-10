@@ -5,12 +5,7 @@ import argparse
 from pathlib import Path
 
 
-#project_root = Path(__file__).parent.parent 
-#config_path_train = project_root / "configs" / "TrainConfig.yaml"
-#config_path_test = project_root / "configs" / "TestConfig.yaml"
-
 def load_config(config_dir, config_name):
-    """Загрузка конфигурации из файла"""
     config_path = os.path.join(config_dir, config_name)
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"Config file not found: {config_path}")
@@ -38,7 +33,3 @@ def ImportConfig():
         print(f"Error in config loading: {e}")
         sys.exit(1)
 
-
-
-#TRAINCONFIG = load_config(config_path=config_path_train)
-#TESTCONFIG = load_config(config_path=config_path_test)

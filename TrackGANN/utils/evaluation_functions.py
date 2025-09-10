@@ -11,7 +11,7 @@ from collections import defaultdict
 from TrackGANN.src.louvian import LouvainMethod, result2graph, compairsion
 
 
-#========================================================================================================#
+
 def GetTrueComm(name_of_directory):
     true_labels_list = []
     folder_path_toCSV = Path(name_of_directory) / Path(name_of_directory)/ "Timeslices"
@@ -26,7 +26,6 @@ def GetTrueComm(name_of_directory):
         true_labels_dict = dict(zip(df['track_id'], df['event_id']))
         true_labels_list.append(true_labels_dict)
     return true_labels_list
-#========================================================================================================#
 
 
 
@@ -35,14 +34,13 @@ def full_evaluate(model, loader, device, name_of_directory, plot_label, threshol
     log_header = "Result"
 
 
-    #========================================================================================================#
     try:
         true_labels_list = GetTrueComm(name_of_directory)
         i=0 
         ari_arr, nmi_arr = [],[]
     except:
         pass
-    #========================================================================================================#
+
 
 
     model.eval()
@@ -57,7 +55,7 @@ def full_evaluate(model, loader, device, name_of_directory, plot_label, threshol
             clusters = louvian.clusters()
             result = compairsion(clusters, log_filename=log_filename, log_header=log_header)
 
-            #========================================================================================================#
+            
             try:
                 true_comm = true_labels_list[i]
 
@@ -74,11 +72,11 @@ def full_evaluate(model, loader, device, name_of_directory, plot_label, threshol
                     print(true_comm)
                     print(true_comm)
 
-                # Adjusted Rand Index (ARI)
+            
                 ari = adjusted_rand_score(true_vector, predicted_vector)
                 print(f"Adjusted Rand Index: {ari:.4f}")
 
-                # Normalized Mutual Information (NMI)
+               
                 nmi = normalized_mutual_info_score(true_vector, predicted_vector)
                 print(f"Normalized Mutual Information: {nmi:.4f}")
 
@@ -89,7 +87,7 @@ def full_evaluate(model, loader, device, name_of_directory, plot_label, threshol
                 i+=1
             except:
                 pass
-            #========================================================================================================#
+            
     try:
         ari_center = np.sum(ari_arr)/len(loader)
         nmi_center = np.sum(nmi_arr)/len(loader)

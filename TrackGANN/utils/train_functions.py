@@ -4,7 +4,7 @@ import numpy as np
 from tqdm import tqdm
 
 from TrackGANN.src.loggers import log_to_file
-#from src.config import TRAINCONFIG
+
 
 
 
@@ -70,7 +70,6 @@ def evaluate(model, loader, criterion, device, threshold=0.5,  **kwargs):
             all_pred_labels.append((pred >= threshold).cpu().numpy())
 
     
-    # Evaluate metrics
     all_true_labels = np.concatenate(all_true_labels)
     all_pred_labels = np.concatenate(all_pred_labels)
     

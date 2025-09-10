@@ -106,7 +106,6 @@ def represent_to_graph_with_times(encoded_tracks, times, labels):
                 if times[i][1] > times[j][0] and times[i][0] < times[j][1]:
                     edge_index.append([i, j])
                     edge_index.append([j, i])
-                    #if not torch.isnan(labels).any():  # Только если лейблы предоставлены
                     edge_labels.append(1 if labels[i] == labels[j] else 0)
                     edge_labels.append(1 if labels[i] == labels[j] else 0)
     
