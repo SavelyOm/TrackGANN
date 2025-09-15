@@ -155,9 +155,6 @@ class SPDEventGenerator:
                 hits.append([x, y, z])
                 momentums.append([px, py, pz])
             else:
-                # add zeros for missing hit
-                #hits.append([0, 0, 0])
-                #momentums.append([0, 0, 0])
                 continue
 
         hits = np.asarray(hits, dtype=np.float32)
@@ -310,55 +307,6 @@ class SPDEventGenerator:
         )
 
 
-def broadcasting_app(a, L, S ):  # Window len = L, Stride len/stepsize = S
-    nrows = ((a.size-L)//S)+1
-    return a[S*np.arange(nrows)[:,None] + np.arange(L)]
 
-class SPDTimesliceTracksDataset(Dataset):
-    def __init__(
-        self, 
-        timeslice: np.ndarray = [],
-        csv_file: str = 'Timeslices/timeslice',
-        n_samples: int = 3,
-        hits_normalizer: Optional[Callable] = None
-    ):  
-        self.hits_normalizer = hits_normalizer
-    
-        self.csv_file = csv_file
-        self.n_samples = n_samples
-        self.timeslice = timeslice
-
-        #timeslice = []
-        for i in range(n_samples):
-            slice_table = pd.read_csv(csv_file+str(i)+'.csv',sep=' ')
-            timeslice.append(slice_table.to_numpy())
-        
-    def __len__(self) -> int:
-        return self.n_samples
-
-    def __getitem__(self, idx: int, n_stations: int):
-        self.n_station = n_stations
-
-        self.hits = self.timeslice[idx][:,:3]
-        self.ev_ids = self.timeslice[idx][:,-1]
-        self.track_ids = self.timeslice[idx][:,-2]
-        
-        
-        
-        if self.hits_normalizer:
-           self.hits = self.hits_normalizer(self.hits)
-        
-        
-            
-        #tracks = torch.split(torch.tensor(self.hits),n_stations)
-        
-        tracks = torch.tensor(
-            broadcasting_app(self.hits.flatten(), L = 3*n_stations, S = 3*n_stations)
-            ) 
-        
-        labels = torch.tensor(self.ev_ids[0::n_stations]
-        )
-        
-        return tracks, labels
     
 

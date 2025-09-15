@@ -2,10 +2,11 @@ import yaml
 import os
 import sys
 import argparse
-from pathlib import Path
 
 
 def load_config(config_dir, config_name):
+    ''' Loads the configuration file. '''
+
     config_path = os.path.join(config_dir, config_name)
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"Config file not found: {config_path}")
@@ -14,7 +15,9 @@ def load_config(config_dir, config_name):
         return yaml.safe_load(f)
 
 def ImportConfig():
-    # Парсинг аргументов командной строки
+    ''' Reads the configuration for subsequent access to individual settings. 
+    Returns both the configuration data and the configuration object. '''
+
     parser = argparse.ArgumentParser(description='Runing GANN')
     parser.add_argument('--config-dir', '-d', type=str, 
                         help='Path to folder with configs')

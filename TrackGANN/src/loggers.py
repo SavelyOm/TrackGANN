@@ -4,6 +4,9 @@ import os
 
 
 def log_to_file(filename=None, header=None):
+    ''' A decorator for logging function results, which accepts the directory path where 
+    the log file will be saved and the filename as arguments. '''
+
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):

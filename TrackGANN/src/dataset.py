@@ -4,6 +4,7 @@ import pandas as pd
 from pathlib import Path
 from tqdm import tqdm
 import numpy as np
+from abc import ABC, abstractmethod
 
 from .TrackML_sampler import TrackMLsampler
 from .data_generation import SPDEventGenerator
@@ -12,20 +13,27 @@ from TrackGANN.utils.saver import save_graph_to_npz
 from TrackGANN.utils.loader import load_npz_to_pyg
 from TrackGANN.utils.convertors import csv_to_graph
 
+
 def remove_folder(path, ask_confirmation=True):
+    ''' Deletes a folder after confirming that the user really wants to delete it. '''
+
     path = Path(path)
     if path.exists() and path.is_dir():
         if ask_confirmation:
-            answer = input(f"This folder '{path}' will be remove? [y/n]: ")
+            answer = input(f"Delete the folder located at the '{path}'? [y/n]: ")
             if answer.lower() != 'y':
                 return False
             else:
                 shutil.rmtree(path)
 
 
-class Dataset:
+class TimeslicesDataset(ABC):
+    ''' Interface for a dataset containing a variable number of timeslices. 
+    This interface defines the methods for generating timeslices as well 
+    as for converting them into a graph data type. '''
+
+    
     def __init__(self, dir_name, remove):
-        
         self.remove = remove
         self.dir_name = Path(dir_name)
         if self.remove == True:
@@ -33,32 +41,51 @@ class Dataset:
             self.dir_name.mkdir(parents=True, exist_ok=True)
             (self.dir_name / "models").mkdir()
     
-        
-    def generation(self, n_samples, mean_event, max_tracks):
-        self.n_samples = n_samples
-        self.mean_event = mean_event
-        self.max_tracks = max_tracks
-        
+    @abstractmethod
+    def train_data_generation(self,
+                            n_samples,
+                            mean_event,
+                            max_tracks,
+                            time_resolution,
+                            timeslice_dir
+                            ):
+        pass
 
-
+    @abstractmethod
+    def test_data_generation(self,
+                            n_samples,
+                            mean_event,
+                            max_tracks,
+                            time_resolution,
+                            timeslice_dir
+                            ):
+        pass
+        
     def convert_to_graph(self):
         raise NotImplementedError()
-
-    def train_test_split(self):
-        raise NotImplementedError()
-    
+ 
 
 
 
 
-class SPDdataset(Dataset):
+class SPDdataset(TimeslicesDataset):
+    ''' This class defines methods for creating a dataset in the configuration of a loose SPD simulation. 
+    The class itself allows working with already generated data, the generation algorithm for which is 
+    described in data_generation.py located in the src folder. Within this class, methods test_data_generation() and 
+    train_data_generation() are defined. A method for generating drift time, drift_time_generation(), has been added. 
+    There is also a method for converting data into a graph data type convert_to_graph(), 
+    and a method for saving timeslices to a file. '''
+
+
     def __init__(self, dir_name, remove=True):
         super().__init__(dir_name, remove)
         self.dir_name = Path(dir_name)
     
 
     def generation(self, n_samples, mean_event, max_tracks):
-        super().generation(n_samples, mean_event, max_tracks)
+        self.n_samples = n_samples
+        self.mean_event = mean_event
+        self.max_tracks = max_tracks
         
         spdgen = SPDEventGenerator(max_event_tracks = self.max_tracks,
                                    mean_events_timeslice = self.mean_event,
@@ -191,7 +218,13 @@ class SPDdataset(Dataset):
 
 
 
-class TrackMLdataset(Dataset):
+class TrackMLdataset(TimeslicesDataset):
+    ''' This class is designed for creating a timeslice dataset with tracks from the open TrackML database. 
+    The class defines methods test_data_generation() and train_data_generation(). 
+    It also includes a method for converting data into a graph type, convert_to_graph(). 
+    The class itself does not implement the algorithms for generating timeslices based on tracks from TrackML. 
+    The timeslice generation methods are described in the TrackML_sampler.py file. '''
+    
     def __init__(self, dir_name, remove=True):
         super().__init__(dir_name, remove)
         self.dir_name = Path(dir_name)

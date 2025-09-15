@@ -2,10 +2,6 @@ import torch
 import time
 from pathlib import Path
 import yaml
-import pandas as pd
-import os
-from collections import defaultdict
-import csv
 
 from TrackGANN.src.model import TracksNN
 from TrackGANN.src.dataset import SPDdataset, TrackMLdataset

@@ -10,6 +10,10 @@ from TrackGANN.utils.model_functions import represent_to_graph_with_times, times
 
 
 class CustomMLP(nn.Module):
+   ''' This MLP neural network class allows specifying activation functions, 
+   dropout probabilities, and data normalization methods. It also provides an 
+   option to include or exclude a sigmoid activation function on the last linear layer. '''
+   
    def __init__(self, inpsize, hiddsize, outpsize, act, norm, dropout, sigma):
       super(CustomMLP, self).__init__()
 
@@ -45,6 +49,10 @@ class CustomMLP(nn.Module):
       return x
    
 class GAT(nn.Module):
+  ''' This GANN neural network class allows specifying the dimensionality of the node hidden 
+  representation space and the number of convolutional layers on the graph, operating within this 
+  hidden space dimension. '''
+
   def __init__(self, num_features, predconvdim, convdim, encoder_convolutions):
     super(GAT, self).__init__()
 
@@ -68,18 +76,22 @@ class GAT(nn.Module):
   
     x, edge_index, t, y = data.x, data.edge_index, data.t, data.y
 
-    x = self.conv1[0](x, edge_index)  # GATConv
-    x = self.conv1[1](x)              # Tanh
-    x = self.conv1[2](x, edge_index)  # GATConv
+    x = self.conv1[0](x, edge_index)    
+    x = self.conv1[1](x)              
+    x = self.conv1[2](x, edge_index)  
 
     for _ in range(self.enc_conf):
-        x = self.conv2[0](x, edge_index)  # GATConv
-        x = self.conv2[1](x)              # Tanh
-        x = self.conv2[2](x, edge_index)  # GATConv
+        x = self.conv2[0](x, edge_index) 
+        x = self.conv2[1](x)              
+        x = self.conv2[2](x, edge_index) 
      
     return Data(x=x, edge_index=edge_index, y=y, t=t)
   
 class Encoder(nn.Module):
+  ''' This class describes a graph encoder whose parameters are set through a config.
+  This neural network module uses auxiliary functions from the file utils/model_functions.py to perform pooling.
+  '''
+
   def __init__(self, num_features, predconvdim, convdim, indim, hiddim, outdim, encoder_convolutions, act, norm, dropout, sigma):
     super(Encoder, self).__init__()
     self.gcn = GAT(num_features=num_features, predconvdim=predconvdim, convdim=convdim, encoder_convolutions=encoder_convolutions)
@@ -97,6 +109,12 @@ class Encoder(nn.Module):
 
 
 class EdgeWeightedGraphConv(MessagePassing):
+    ''' An edge classifier that uses a Message Passing mechanism with attention on edges. 
+    The CustomMLP class objects are used to compute attention and update the hidden edge 
+    representations. The message() method defines the aggregation rules on the graph, 
+    while the update() method defines rules for updating the hidden node representations. 
+    The propagate() method calls all the necessary functions to perform a complete step of the classifier. '''
+
     def __init__(self, node_features, num_iterations, edge_weight_layers, edge_update_layers, node_update_layers,  edge_features=1):
         super(EdgeWeightedGraphConv, self).__init__(aggr='add')
         self.node_features = node_features
@@ -136,6 +154,11 @@ class EdgeWeightedGraphConv(MessagePassing):
 
 
 class TracksNN(nn.Module):
+    ''' This model for track classification takes a graph as input and returns a list with predictions 
+    of edge validity and the corresponding adjacency matrix. During training, it also returns a list 
+    of labeled edges for the calculation of loss and metrics. All model parameters are set in the 
+    configuration file, an example of which can be found in the configs/... directory. '''
+    
     def __init__(self, hidden_linear_layers, out_linear_layer, encoder_convolutions,
                  edge_weight_layers, edge_update_layers, node_update_layers, classifier_convolutions):
       super(TracksNN, self).__init__()

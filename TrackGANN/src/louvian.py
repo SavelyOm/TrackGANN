@@ -9,6 +9,10 @@ from .loggers import log_to_file
 
 
 class GraphMethod:
+    ''' This interface defines classes that describe classical graph clustering methods 
+    in terms of parallel computations based on the Torch.Tensor data structure. 
+    The interface includes methods for running the clustering algorithm and for visualizing the resulting graph. '''
+
     def __init__(self, graph):
         self.graph = graph 
         self.result = None    
@@ -24,11 +28,18 @@ class GraphMethod:
 
 
 class LouvainMethod(GraphMethod):
+    ''' This class describes the Louvain Method in terms of parallel computations 
+    based on the torch.Tensor data structure. All main steps of Louvain Method clustering, 
+    such as the calculation of modularity (modularity()) and the optimization step louvain_optimize(), 
+    operate with torch.Tensor. The class defines the compute() method and the visualize_result() method. 
+    Additionally, a graph_constructor() method is included to build the graph 
+    for subsequent visualization. For convenience, a clusters() method is provided that 
+    returns the communities of nodes as a torch.Tensor. '''
+
     def __init__(self, graph):
         self.graph = graph
 
     def modularity(self, adj_matrix: torch.Tensor, clusters: torch.Tensor):
-
         N = adj_matrix.size(0)
         m = adj_matrix.sum().item() / 2
         degrees = adj_matrix.sum(dim=1)
@@ -41,7 +52,7 @@ class LouvainMethod(GraphMethod):
                     A_ij = adj_matrix[i, j]
                     k_i_k_j = degrees[i] * degrees[j]
                     self.Q += A_ij - (k_i_k_j / (2 * m))
-        self.Q /= (2 * m)  # Нормализаци
+        self.Q /= (2 * m) 
 
         return self.Q
 
@@ -130,6 +141,9 @@ class LouvainMethod(GraphMethod):
 
 
 def result2graph(pred, edge_index, threshold):
+    ''' A function to convert the model's output into a graph that can 
+    be processed by classical clustering methods. '''
+
     edge_index_t = edge_index.t() 
     true_edges=torch.where(pred > threshold)[0]
     mask = torch.zeros(edge_index_t.shape[0], dtype=torch.bool, device='cuda:0')
@@ -143,6 +157,7 @@ def result2graph(pred, edge_index, threshold):
 
 @log_to_file()
 def compairsion(tensor, **kwargs):
+    ''' This function converts the clustering result into a convenient dictionary format. '''
 
     cluster_to_nodes1 = defaultdict(list)
 
