@@ -20,7 +20,6 @@ def GetTrueComm(name_of_directory):
     csv_files.sort(key=lambda x: int(x.split('_')[1].split('.')[0]))
 
     for filename in csv_files:
-        print(filename)
         file_path = os.path.join(folder_path_toCSV, filename)
         df = pd.read_csv(file_path, sep=' ', index_col=False)
         true_labels_dict = dict(zip(df['track_id'], df['event_id']))
@@ -69,7 +68,6 @@ def full_evaluate(model, loader, device, name_of_directory, plot_label, threshol
                 try:
                     true_vector = [true_comm[node] for node in nodes_list]
                 except:
-                    print(true_comm)
                     print(true_comm)
 
             

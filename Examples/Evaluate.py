@@ -36,7 +36,7 @@ det_eff = TESTCONFIG['detector']['detector_eff']
 
 # Timeslice parameters
 #=======================================================================#
-time_resolution = TESTCONFIG['dataset']['time_resolution']
+time_resolution = TESTCONFIG['timeslice']['time_resolution']
 n_samples = TESTCONFIG['dataset']['n_samples']
 mean_event = TESTCONFIG['timeslice']['mean_events']
 max_tracks = TESTCONFIG['timeslice']['max_tracks']
