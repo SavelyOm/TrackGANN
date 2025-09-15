@@ -86,7 +86,7 @@ def norm_layer(norm_type, features):
   elif norm_type == "instance":
       return nn.InstanceNorm1d(features)
   elif norm_type is None:
-      return nn.Identity()  # Без нормализации
+      return nn.Identity()
   else:
       raise ValueError(f"Unsupported normalization type: {norm_type}")
   

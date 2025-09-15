@@ -13,6 +13,7 @@ from TrackGANN.src.louvian import LouvainMethod, result2graph, compairsion
 
 
 def GetTrueComm(name_of_directory):
+    ''' A function to convert labeled data into a dictionary of the following format: dict(track_id: event_id) '''
     true_labels_list = []
     folder_path_toCSV = Path(name_of_directory) / Path(name_of_directory)/ "Timeslices"
 
@@ -29,6 +30,12 @@ def GetTrueComm(name_of_directory):
 
 
 def full_evaluate(model, loader, device, name_of_directory, plot_label, threshold=0.5):
+    ''' This function performs a complete sorting of tracks 
+    by events from start to finish. The function takes graph 
+    data as input, processes it through a neural network model, 
+    and finally performs full clustering using the Louvain Method. 
+    The output is a dictionary of the form dict(event_id: list[tracks]). '''
+    
     log_filename = Path(name_of_directory) / f'{plot_label}.csv'
     log_header = "Result"
 

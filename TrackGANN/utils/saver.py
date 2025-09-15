@@ -41,18 +41,5 @@ def save_model(model, optimizer, epoch, dir_name, model_name):
     }, model_path)
 
 
-def del_pairs(edge_index):
-
-    unique_pairs = {}
-    edge_index = edge_index.T
-    
-    for pair in edge_index:
-        sorted_pair = tuple(sorted(pair.tolist()))
-        
-        
-        if sorted_pair not in unique_pairs:
-            unique_pairs[sorted_pair] = pair.tolist()
-    
-    return torch.tensor(list(unique_pairs.values())).T.long().contiguous().to('cuda')
 
 

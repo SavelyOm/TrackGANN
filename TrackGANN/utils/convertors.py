@@ -7,7 +7,8 @@ from torch_geometric.data import Data
 
 
 def csv_to_graph(csv_file):
-
+    ''' A converter for a CSV files in the format 
+    [x, y, z, track_id, event_id, t_left, t_right] '''
     timeslice = pd.read_csv(csv_file, sep=' ')
 
     tm_nodes = []
@@ -48,8 +49,9 @@ def csv_to_graph(csv_file):
 
 def dict_to_graph(timeslice,
                   format):
-    ''' convertr for lists of dict 
-    list(dict(hit: [x,y,z], track_id: tr_id, drift_time: [t_left, t_right], event_id: ev_id))'''
+    ''' A converter for a list of dictionaries in the format 
+    list(dict(hit: [x,y,z], track_id: tr_id, drift_time: [t_left, t_right], event_id: ev_id)) '''
+
     sorted_timeslice = sorted(timeslice, key=lambda x: (x["track_id"], math.sqrt(x["x"]**2+x["y"]**2+x["z"]**2)))
     tm_nodes = []
     tm_edges = []
