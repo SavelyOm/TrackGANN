@@ -2,6 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def plot_metrics(path_to_csv):
+    ''' Function for visualizing metrics and loss function throughout the entire training and validation process. '''
+
     data = pd.read_csv(str(path_to_csv)+'.csv')
     
     
