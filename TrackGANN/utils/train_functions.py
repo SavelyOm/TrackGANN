@@ -9,6 +9,8 @@ from TrackGANN.src.loggers import log_to_file
 
 
 def balanced_focal_loss(pred, label, pos_weight, neg_weight, gamma, sample_prob):
+    ''' A function that calculates the average error across all instances for the BFL. '''
+
     with torch.no_grad():
         is_class_0 = (label == 0)
         is_class_1 = (label == 1)
@@ -27,6 +29,8 @@ def balanced_focal_loss(pred, label, pos_weight, neg_weight, gamma, sample_prob)
 
 
 def balanced_cross_entropy(pred, label, pos_weight=1, neg_weight=0.4):
+    ''' A function that calculates the average error across all instances for the BCE '''
+
     weights = label * pos_weight + (1 - label) * neg_weight
     loss = F.binary_cross_entropy(pred, label, weight=weights, reduction='mean') 
     return loss
@@ -34,6 +38,10 @@ def balanced_cross_entropy(pred, label, pos_weight=1, neg_weight=0.4):
 
 @log_to_file()
 def train(model, loader, optimizer, criterion, device, **kwargs):
+    ''' Trains the model. Requires specifying the model, optimizer, 
+    loss function, dataset, and the device for training. The entire 
+    training process is logged using a decorator. '''
+
     model.train()
     total_loss = 0
 
@@ -52,6 +60,11 @@ def train(model, loader, optimizer, criterion, device, **kwargs):
 
 @log_to_file()
 def evaluate(model, loader, criterion, device, threshold=0.5,  **kwargs):
+    ''' Calculates quality metrics with a given threshold and 
+    loss function on a specified test dataset, which is also 
+    provided as a function argument. '''
+
+
     model.eval()
 
     total_loss = 0
