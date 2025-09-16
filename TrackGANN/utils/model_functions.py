@@ -10,6 +10,7 @@ from torch import nn
 
 
 def del_pairs(edge_index):
+    ''' Removes duplicate edge indices, converting an undirected graph into a directed one. '''
 
     unique_pairs = {}
     edge_index = edge_index.T
@@ -25,6 +26,7 @@ def del_pairs(edge_index):
 
 
 def timeslice_split(dataset):
+    ''' Splits the graph consisting of hits into separate tracks with their coordinates, labels, and drift times. '''
 
     tm = dataset
     tracks = []
@@ -60,6 +62,9 @@ def timeslice_split(dataset):
 
 
 def tracks_pool(tracks):
+    ''' Averages the feature vectors of each hit within a track. 
+    Takes as input a list of tensors containing feature vectors of hits. '''
+
     represent = []
     labels = []
     time_intervals = []
@@ -79,6 +84,8 @@ def tracks_pool(tracks):
 
 
 def norm_layer(norm_type, features):
+  ''' A function that returns the normalization function based on a given key. '''
+
   if norm_type == "layer":
       return nn.LayerNorm(features)
   elif norm_type == "batch":
@@ -96,6 +103,9 @@ def norm_layer(norm_type, features):
 
 
 def represent_to_graph_with_times(encoded_tracks, times, labels):
+    ''' Builds a supergraph where nodes are encoded tracks, and 
+    edges are formed based on the intersection of drift time intervals. '''
+
     hmatrix = encoded_tracks.float().to('cuda')
     edge_index = []
     edge_labels = []
