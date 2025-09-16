@@ -8,6 +8,8 @@ from pathlib import Path
 
 
 def save_graph_to_npz(G, filename):
+    ''' Saves a NetworkX graph in npz format with the filename specified as a function argument. '''
+
     mapping = {old_label: new_label for new_label, old_label in enumerate(G.nodes())}
     G = nx.relabel_nodes(G, mapping)
 
@@ -33,6 +35,8 @@ def save_graph_to_npz(G, filename):
     
 
 def save_model(model, optimizer, epoch, dir_name, model_name):
+    ''' Saves the trained model along with its optimizer and the number of the last training epoch. '''
+
     model_path = Path(dir_name) / "models" / f"{model_name}_epoch_{epoch}.pt"
     torch.save({
         'epoch': epoch,
