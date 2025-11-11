@@ -79,7 +79,7 @@ def full_evaluate(model, loader, device, name_of_directory, plot_label, threshol
 
             
                 ari = adjusted_rand_score(true_vector, predicted_vector)
-                print(f"Adjusted Rand Index: {ari:.4f}")
+                print(f"\nAdjusted Rand Index: {ari:.4f}")
 
                
                 nmi = normalized_mutual_info_score(true_vector, predicted_vector)

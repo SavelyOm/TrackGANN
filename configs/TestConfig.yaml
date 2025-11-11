@@ -2,13 +2,13 @@
 
 timeslice:
   max_tracks: 6
-  mean_events: 10
-  time_resolution: 7
+  mean_events: 15
+  time_resolution: 5
 
 detector:
   detector_eff: 0.95
   n_stations: 35
-  r_min: 150
+  r_min: 75
   r_max: 850
 
 
@@ -37,7 +37,7 @@ model:
     - 128
     - 64
     out_linear_layer: 32
-    n_convolutions: 6
+    n_convolutions: 4
   classifier:
     edge_weight_layers:
     - 128
@@ -48,7 +48,7 @@ model:
     node_update_layers:
     - 128
     - 128
-    n_convolutions: 6
+    n_convolutions: 4
 
 
 
