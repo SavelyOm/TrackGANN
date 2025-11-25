@@ -18,7 +18,6 @@ dataset:
   name_of_directory: "TestDir_ForEval"
   n_samples: 100
   test_fraction: 1
-  MLtrackPath: ""
 
 
 
