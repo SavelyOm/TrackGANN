@@ -1,5 +1,5 @@
 
-name_of_directory: TestDir
+name_of_directory: TrainDir
 
 detector:
   detector_eff: 0.95
@@ -11,32 +11,32 @@ Train_dataset:
   dataset_name: SPD
   MLtrackPath: ""
   dataset_directory: Train
-  time_resolution: 4
+  time_resolution: 5
   max_tracks: 6
   mean_events: 15
-  n_samples: 10
+  n_samples: 800
 
 
 Test_dataset:
   dataset_name: SPD
   MLtrackPath: ""
-  dataset_directory: Test
-  time_resolution: 4
+  dataset_directory: TestSPD
+  time_resolution: 5
   max_tracks: 6
   mean_events: 15
-  n_samples: 10
-  log_label: SPD_15_DeltaT4
+  n_samples: 300
+  log_label: SPD15_DeltaT5
   
 
 Test_dataset1:
   dataset_name: TrackML
-  MLtrackPath: "TrackML_data/train2"
-  dataset_directory: Test1
+  MLtrackPath: path_to_the_directory_containing_the_folders_"trainN"_from_TrackML_database
+  dataset_directory: TestTrackML
   time_resolution: 4
   max_tracks: 6
   mean_events: 10
-  n_samples: 10
-  log_label: ML_10_DeltaT4
+  n_samples: 300
+  log_label: ML10_DeltaT4
 
 
 model:
@@ -64,12 +64,12 @@ training:
   neg_weight: 0.9
   gamma: 1.5
   save_prob: 1
-  n_epochs: 5
+  n_epochs: 10
 
 loader:
   load_model: True
-  model_dirrectory: SPD_15Event/SPD_SN5
-  model_name: SPD_SN5_model_epoch_780
+  model_dirrectory: path_to_the_directory_containing_the_folder_"models"_with_saved_model
+  model_name: model's_name
 
 saver:
   model_name: Test_model

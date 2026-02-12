@@ -108,7 +108,6 @@ model, optimizer, new_epoch = model_loader(model, optimizer, model_dirrectory, l
 #=======================================================================#
 
 
-
 # EVALUATING
 #=======================================================================#
 start_time = time.time()

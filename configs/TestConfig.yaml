@@ -13,9 +13,9 @@ detector:
 
 
 dataset:
-  dataset_name: "SPD"
+  dataset_name: SPD
   MLtrackPath: ""
-  name_of_directory: "TestDir_ForEval"
+  name_of_directory: TestDir_Eval
   n_samples: 100
   test_fraction: 1
 
@@ -25,8 +25,8 @@ Log_parms:
   log_label: LogName
 
 loader:
-  model_dirrectory: "C:/Users/suka1/NN/GNN_practice/TrackGANN/SPD_15Event/SPD_DeltaT5"
-  model_name: "SPD_DeltaT5_model_epoch_420"
+  model_dirrectory: path_to_the_directory_containing_the_folder_"models"_with_saved_model
+  model_name: model's_name
 
 
 model:
