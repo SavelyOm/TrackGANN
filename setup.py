@@ -11,7 +11,7 @@ setup(
     packages=find_packages(),
         install_requires=[
         'torch>=2.7.1',
-        'yaml>=1.18.3',
+        'PyYAML>=1.18.3',
         'numpy>=1.26.4',
         'pandas>=2.2.3',
         'typer>=0.16.1',
