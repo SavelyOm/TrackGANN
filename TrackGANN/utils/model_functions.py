@@ -83,6 +83,68 @@ def tracks_pool(tracks):
     return pool_result, labels, time_intervals
 
 
+
+
+
+
+
+
+
+
+def del_pairs_GPU(edge_index):
+
+    edge_index = edge_index.to('cuda')
+    
+    sorted_edges, _ = torch.sort(edge_index, dim=0)
+    unique_edges = torch.unique(sorted_edges, dim=1)
+
+    return unique_edges.contiguous()
+
+
+
+
+def tracks_pool_GPU(dataset):
+
+
+    x = dataset.x.to('cuda')
+    y = dataset.y.to('cuda')
+    t = dataset.t.to('cuda')
+    edge_index = dataset.edge_index.to('cuda')
+
+    clear_edge_index = del_pairs_GPU(edge_index)
+
+    dst_nodes = clear_edge_index[1]
+    num_nodes = int(dst_nodes[-1] + 1) 
+
+    diff = dst_nodes[1:] - dst_nodes[:-1]
+    breaks = torch.nonzero(diff != 1).view(-1) +1
+
+    
+    node_boundaries = torch.cat([torch.tensor([0+1], device='cuda'), dst_nodes[breaks].long(), torch.tensor([num_nodes+1], device='cuda')])
+    
+    lengths = node_boundaries[1:] - node_boundaries[:-1]
+
+    batch_tensor = torch.repeat_interleave(torch.arange(len(lengths), device='cuda'), lengths)
+
+    
+    track_starts = torch.cat([torch.tensor([0], device='cuda'), dst_nodes[breaks].long(), torch.tensor([num_nodes-1], device='cuda')])
+    labels = y[track_starts[:-1]].float()
+    time_intervals = t[track_starts[:-1]].float()
+    pool_result = torch_geometric.nn.global_mean_pool(x, batch_tensor)
+
+    return pool_result, labels, time_intervals
+
+
+
+
+
+
+
+
+
+
+
+
 def norm_layer(norm_type, features):
   ''' A function that returns the normalization function based on a given key. '''
 
@@ -97,6 +159,13 @@ def norm_layer(norm_type, features):
   else:
       raise ValueError(f"Unsupported normalization type: {norm_type}")
   
+
+
+
+
+
+
+
 
 
 
@@ -124,3 +193,42 @@ def represent_to_graph_with_times(encoded_tracks, times, labels):
                              dtype=torch.float).to('cuda')
 
     return Data(x=hmatrix, edge_index=edge_index, y=edge_labels)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def represent_to_graph_with_times_GPU(encoded_tracks, times, labels):
+
+
+    device = encoded_tracks.device
+    N = encoded_tracks.size(0)
+
+    time_left = times[:,0].view(-1, 1)
+    time_right = times[:,1].view(-1, 1)
+
+    cond1 = (time_left < time_right.T)
+    cond2 = (time_right > time_left.T)
+
+    mask = cond1 & cond2 & ~torch.eye(N,dtype=torch.bool, device=device)
+
+    edge_index = torch.nonzero(mask).T.contiguous()
+
+
+    if labels is not None:
+        row, col = edge_index[0], edge_index[1]
+        edge_labels = (labels[row] == labels[col]).float()
+    else:
+        edge_labels = torch.zeros(edge_index.size(1), device=device)
+
+
+    return Data(x=encoded_tracks.float(), edge_index=edge_index, y=edge_labels)

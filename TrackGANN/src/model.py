@@ -6,6 +6,7 @@ from torch_geometric.nn import  GATConv
 
 
 from TrackGANN.utils.model_functions import represent_to_graph_with_times, timeslice_split, tracks_pool, norm_layer
+from TrackGANN.utils.model_functions import represent_to_graph_with_times_GPU, tracks_pool_GPU
 
 
 
@@ -99,8 +100,7 @@ class Encoder(nn.Module):
 
   def forward(self, data):
     data = self.gcn(data)
-    tracks = timeslice_split(data)
-    x, labels, time_intervals = tracks_pool(tracks)
+    x, labels, time_intervals = tracks_pool_GPU(data)
     x = self.mlp(x)
     
     return x, time_intervals, labels
@@ -169,7 +169,8 @@ class TracksNN(nn.Module):
     
     def forward(self, data):
         x, time_intervals, y = self.encoder(data)
-        graph = represent_to_graph_with_times(x, time_intervals, y).to('cuda')
+        #graph = represent_to_graph_with_times(x, time_intervals, y).to('cuda')
+        graph = represent_to_graph_with_times_GPU(x, time_intervals, y).to('cuda')
         x, y, edge_index = self.classifier(graph)
         return x, y, edge_index
     
