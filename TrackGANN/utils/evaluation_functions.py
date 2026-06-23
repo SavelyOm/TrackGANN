@@ -102,8 +102,8 @@ def full_evaluate(model, loader, device, name_of_directory, plot_label, threshol
         for data in tqdm(loader, desc="Evaluation", unit="timeslice"):
             
             data = data.to(device)
-            pred, label, edge_index = model(data)
-            graph=result2graph(pred=pred,edge_index=edge_index, threshold=threshold)
+            node_attr, edge_attr, edge_label, edge_index = model(data)
+            graph=result2graph(pred=edge_attr,edge_index=edge_index, threshold=threshold)
             louvian = LouvainMethod(graph=graph)
             louvian.compute()
             clusters = louvian.clusters()

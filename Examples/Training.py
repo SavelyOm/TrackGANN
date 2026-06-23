@@ -91,7 +91,6 @@ load_model_name = TRAINCONFIG['loader']['model_name']
 pos_weight = TRAINCONFIG['training']['pos_weight']
 neg_weight = TRAINCONFIG['training']['neg_weight']
 gamma = TRAINCONFIG['training']['gamma']
-save_prob = TRAINCONFIG['training']['save_prob']
 #=======================================================================#
 
 
@@ -207,7 +206,7 @@ if load_model == True:
 # TRAINING LOOP
 #=======================================================================#
 start_time = time.time()
-criterion = lambda pred, label: balanced_focal_loss(pred, label, pos_weight, neg_weight, gamma, save_prob)
+criterion = lambda pred, label: balanced_focal_loss(pred, label, pos_weight, neg_weight, gamma)
 
 for epoch in range(start_epoch, n_epochs):
         train_loss = train(model=model, loader=train_data, optimizer=optimizer, criterion=criterion, device=device, 

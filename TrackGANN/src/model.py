@@ -142,7 +142,7 @@ class EdgeWeightedGraphConv(MessagePassing):
             x = updated_x + x
         
         edge_attr = edge_attr.squeeze()
-        return edge_attr, y, edge_index
+        return x, edge_attr, y, edge_index
 
     def message(self, x_j, edge_attr):
         return x_j * edge_attr
@@ -171,8 +171,8 @@ class TracksNN(nn.Module):
         x, time_intervals, y = self.encoder(data)
         #graph = represent_to_graph_with_times(x, time_intervals, y).to('cuda')
         graph = represent_to_graph_with_times_GPU(x, time_intervals, y).to('cuda')
-        x, y, edge_index = self.classifier(graph)
-        return x, y, edge_index
+        node_attr, edge_attr, edge_label, edge_index = self.classifier(graph)
+        return node_attr, edge_attr, edge_label, edge_index
     
 
 
